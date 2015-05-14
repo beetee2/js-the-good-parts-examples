@@ -1,4 +1,4 @@
-var badFibonacci = (function() {
+var noMemoization = (function() {
 	var fibonacciCallCount = 0;
 
 	var fibonacci = function (n) {
@@ -14,22 +14,35 @@ var badFibonacci = (function() {
 	document.getElementById('no-memoization-bad').innerHTML += '<br />' + 'FibonacciCallCount: ' + fibonacciCallCount;
 })();
 
-var fibonacci = (function ( ) {
+
+var goodMemoization = (function() {
 	var fibonacciCallCount = 0;
-	var memo = [0, 1];
 
-	var fib = function (n) {
-		fibonacciCallCount++;
-		var result = memo[n];
+	var fibonacci = (function ( ) {
+		var memo = [0, 1];
 
-		if (typeof result !== 'number') {
-		 	result = fib(n - 1) + fib(n - 2);
-			memo[n] = result;
-		}
+		var fib = function (n) {
+			fibonacciCallCount++;
 
-		return result;
-	};
-	
+			 var result = memo[n];
+
+			 if (typeof result !== 'number') {
+				 result = fib(n - 1) + fib(n - 2);
+				 memo[n] = result;
+			 }
+			 return result;
+		 };
+
+		return {
+			fib: fib,
+			fibonacciCallCount: fibonacciCallCount
+		};
+
+	}( ));
+
+	for (var i = 0; i <= 10; i += 1) {
+	 document.getElementById('memoization-good').innerHTML += '// ' + i + ': ' + fibonacci.fib(i) + '<br />';
+	}
+
 	document.getElementById('memoization-good').innerHTML += '<br />' + 'FibonacciCallCount: ' + fibonacciCallCount;
- 	return fib;
 })();
