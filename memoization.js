@@ -34,8 +34,7 @@ var goodMemoization = (function() {
 		 };
 
 		return {
-			fib: fib,
-			fibonacciCallCount: fibonacciCallCount
+			fib: fib
 		};
 
 	}( ));
@@ -45,4 +44,37 @@ var goodMemoization = (function() {
 	}
 
 	document.getElementById('memoization-good').innerHTML += '<br />' + 'FibonacciCallCount: ' + fibonacciCallCount;
+})();
+
+var memoizer = (function() {
+
+	var fib = (function() {
+
+		var memoizer = function (memo, formula) {
+			var recur = function (n) {
+				var result = memo[n];
+				
+				if (typeof result !== 'number') {
+					result = formula(recur, n);
+					memo[n] = result;
+				}
+				return result;
+			};
+			return recur;
+		};
+
+	
+		var fibonacci = memoizer([0, 1], function (recur, n) {
+			return recur(n - 1) + recur(n - 2);
+		});
+
+		return {
+			fibonacci: fibonacci
+		};
+	})();
+	
+
+	for (var i = 0; i <= 10; i += 1) {
+	 document.getElementById('memoization-memoizer').innerHTML += '// ' + i + ': ' + fib.fibonacci(i) + '<br />';
+	}
 })();
